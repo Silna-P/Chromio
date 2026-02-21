@@ -1,0 +1,9 @@
+.navbar {
+    background-color: var(--navbar-bg, inherit) !important;
+}
+
+/* Breadcrumb text color */
+.breadcrumb-item a,
+.breadcrumb-item span {
+    color: var(--breadcrumb-color, inherit) !important;
+}

@@ -8,6 +8,9 @@ app_license = "mit"
 # Apps
 # ------------------
 
+app_include_css = "/assets/chromio/css/chromio.css"
+app_include_js = "/assets/chromio/js/chromio.js"
+
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page

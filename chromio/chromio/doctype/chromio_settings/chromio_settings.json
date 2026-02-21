@@ -1,0 +1,55 @@
+
+{
+ "actions": [],
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "navbar_background_color",
+  "breadcrumb_text_color",
+  "hide_help_menu"
+ ],
+ "fields": [
+  {
+   "fieldname": "navbar_background_color",
+   "fieldtype": "Color",
+   "label": "Navbar Background Color"
+  },
+  {
+   "fieldname": "breadcrumb_text_color",
+   "fieldtype": "Color",
+   "label": "Breadcrumb Text Color"
+  },
+  {
+   "fieldname": "hide_help_menu",
+   "fieldtype": "Check",
+   "label": "Hide Help Menu"
+  }
+ ],
+ "is_single": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Chromio",
+ "name": "Chromio Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}
