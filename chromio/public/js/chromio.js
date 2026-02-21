@@ -1,88 +1,70 @@
 
-frappe.after_ajax(function () {
-    frappe.call({
-        method: "frappe.client.get",
-        args: {
-            doctype: "Chromio Settings",
-            name: "Chromio Settings"
-        },
-        callback: function (r) {
-            if (!r.message) return;
-            var doc = r.message;
-            var style = "";
+(function() {
+    function applyChromio() {
+        if (!window.frappe) return;
 
-            // 1. Navbar background color
-            if (doc.navbar_background_color) {
-                style += `
-                    .navbar {
-                        background-color: ${doc.navbar_background_color} !important;
+        frappe.call({
+            method: "frappe.client.get_single_value",
+            args: { doctype: "Chromio Settings", field: "navbar_background_color" },
+            callback: function(r1) {
+                frappe.call({
+                    method: "frappe.client.get_single_value",
+                    args: { doctype: "Chromio Settings", field: "breadcrumb_text_color" },
+                    callback: function(r2) {
+                        var style = "";
+
+                        // Navbar color
+                        if (r1.message) {
+                            style += `
+                                .navbar {
+                                    background-color: ${r1.message} !important;
+                                }
+                                .navbar input, .navbar .form-control {
+                                    background-color: #ffffff !important;
+                                    color: #000000 !important;
+                                }
+                            `;
+                        }
+
+                        // Breadcrumb color
+                        if (r2.message) {
+                            style += `
+                                #navbar-breadcrumbs a,
+                                #navbar-breadcrumbs li,
+                                #navbar-breadcrumbs span {
+                                    color: ${r2.message} !important;
+                                }
+                            `;
+                        }
+
+                        // Always hide Help menu
+                        style += `
+                            .dropdown-help,
+                            .nav-item.dropdown-help {
+                                display: none !important;
+                            }
+                        `;
+
+                        var tag = document.getElementById("chromio-style");
+                        if (!tag) {
+                            tag = document.createElement("style");
+                            tag.id = "chromio-style";
+                            document.head.appendChild(tag);
+                        }
+                        tag.innerHTML = style;
                     }
-                    .navbar input,
-                    .navbar .form-control {
-                        background-color: #ffffff !important;
-                        color: #000000 !important;
-                    }
-                `;
+                });
             }
+        });
+    }
 
-            // 2. Breadcrumb color - exact selector from HTML
-            // id="navbar-breadcrumbs" contains <li> and <a> tags
-            if (doc.breadcrumb_text_color) {
-                style += `
-                    #navbar-breadcrumbs li a,
-                    #navbar-breadcrumbs li,
-                    #navbar-breadcrumbs a {
-                        color: ${doc.breadcrumb_text_color} !important;
-                    }
-                `;
-            }
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", applyChromio);
+    } else {
+        applyChromio();
+    }
 
-            // 3. Hide Help - exact class from HTML: dropdown-help
-            style += `
-                .dropdown-help,
-                .nav-item.dropdown.dropdown-help {
-                    display: none !important;
-                }
-            `;
-
-            var tag = document.getElementById("chromio-style");
-            if (!tag) {
-                tag = document.createElement("style");
-                tag.id = "chromio-style";
-                document.head.appendChild(tag);
-            }
-            tag.innerHTML = style;
-        }
-    });
-});
-
-
-
-frappe.ready(function () {
-    frappe.call({
-        method: "frappe.client.get",
-        args: {
-            doctype: "Chromio Settings",   // Change if your doctype name is different
-            name: "Chromio Settings"
-        },
-        callback: function (r) {
-            if (!r.message) return;
-
-            let settings = r.message;
-
-            // Hide Help Menu if checkbox enabled
-            if (settings.hide_help_menu) {
-                let helpMenu = document.querySelector('[data-label="Help"]');
-                if (helpMenu) {
-                    helpMenu.closest('li, .dropdown, .nav-item').style.display = 'none';
-                }
-
-                // Alternative selector for Frappe v15
-                let helpDropdown = document.querySelector('.dropdown-help');
-                if (helpDropdown) {
-                    helpDropdown.style.display = 'none';
-                }
-            }
-        }
-    });
-});
+    if (window.frappe) {
+        frappe.after_ajax && frappe.after_ajax(applyChromio);
+    }
+})();
